@@ -1,6 +1,10 @@
-
-<?php    
-session_start();
+<?php  
+if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    }  
+$act = ""; 
+// session_start();
  if (empty($_SESSION['user']) AND empty($_SESSION['pass'])){
   echo "<link href='style.css' rel='stylesheet' type='text/css'>
  <center>Untuk mengakses modul, Anda harus login <br>";
@@ -9,7 +13,12 @@ session_start();
 else{
 
 $aksi="modul/mod_jadwal/aksi_jadwal.php";
-switch($_GET[act]){
+if(isset($_GET['act'])) 
+    { 
+        $act = $_GET['act']; 
+    }
+ // var_dump($act);
+switch($act){
   // Tampil data
   
   default:
@@ -39,16 +48,16 @@ switch($_GET[act]){
 
     if ($_SESSION['level']=='anggota'){
 
-      $tampil = mysql_query("SELECT jadwal.id, jadwal.tanggal, jadwal.sppd, jadwal.kegiatan, jadwal.tujuan, anggota.nama ,jadwal.lama
+      $tampil = $mysqli->query("SELECT jadwal.id, jadwal.tanggal, jadwal.sppd, jadwal.kegiatan, jadwal.tujuan, anggota.nama ,jadwal.lama
         FROM jadwal inner join anggota ON anggota.id=jadwal.anggota_id ORDER BY jadwal.tanggal DESC LIMIT $posisi,$batas");
     }
     else{
-      $tampil= mysql_query("SELECT jadwal.id, jadwal.tanggal, jadwal.sppd, jadwal.kegiatan, jadwal.tujuan, anggota.nama ,jadwal.lama
+      $tampil= $mysqli->query("SELECT jadwal.id, jadwal.tanggal, jadwal.sppd, jadwal.kegiatan, jadwal.tujuan, anggota.nama ,jadwal.lama
         FROM jadwal inner join anggota ON anggota.id=jadwal.anggota_id  ORDER BY jadwal.tanggal DESC LIMIT $posisi,$batas");
     }
 
     $no = $posisi+1;
-    while($r=mysql_fetch_array($tampil)){
+    while($r=mysqli_fetch_array($tampil)){
 
       // $tgl_posting=tgl_indo($r['tanggal']);
       echo "<tr><td class='center' width='25'>$no</td>
@@ -73,10 +82,10 @@ switch($_GET[act]){
     echo "</table>";
 
     if ($_SESSION['level']=='anggota'){
-      $jmldata = mysql_num_rows(mysql_query("SELECT * FROM jadwal"));
+      $jmldata = mysqli_num_rows( $mysqli->query("SELECT * FROM jadwal"));
     }
     else{
-      $jmldata = mysql_num_rows(mysql_query("SELECT * FROM jadwal "));
+      $jmldata = mysqli_num_rows( $mysqli->query("SELECT * FROM jadwal "));
     }  
     $jmlhalaman  = $p->jumlahHalaman($jmldata, $batas);
     $linkHalaman = $p->navHalaman($_GET['halaman'], $jmlhalaman);
@@ -102,19 +111,19 @@ switch($_GET[act]){
     $posisi = $p->cariPosisi($batas);
 
     if ($_SESSION['level']=='anggota'){
-      $tampil = mysql_query("SELECT jadwal.id, jadwal.tanggal, jadwal.sppd, jadwal.kegiatan, jadwal.tujuan, anggota.nama ,jadwal.lama
+      $tampil =  $mysqli->query("SELECT jadwal.id, jadwal.tanggal, jadwal.sppd, jadwal.kegiatan, jadwal.tujuan, anggota.nama ,jadwal.lama
         FROM jadwal inner join anggota ON anggota.id=jadwal.anggota_id 
          WHERE tanggal LIKE '%$_GET[tanggal]%' ORDER BY jadwal.tanggal,jadwal.sppd DESC LIMIT $posisi,$batas");
     }
     else{
-      $tampil=mysql_query("SELECT jadwal.id, jadwal.tanggal, jadwal.sppd, jadwal.kegiatan, jadwal.tujuan, anggota.nama ,jadwal.lama
+      $tampil= $mysqli->query("SELECT jadwal.id, jadwal.tanggal, jadwal.sppd, jadwal.kegiatan, jadwal.tujuan, anggota.nama ,jadwal.lama
         FROM jadwal inner join anggota ON anggota.id=jadwal.anggota_id 
         WHERE username='$_SESSION[user]' AND tanggal LIKE '%$_GET[tanggal]%'       
         ORDER BY jadwal.tanggal,jadwal.sppd DESC LIMIT $posisi,$batas");
     }
   
     $no = $posisi+1;
-    while($r=mysql_fetch_array($tampil)){
+    while($r=mysqli_fetch_array($tampil)){
       // $tgl_posting=tgl_indo($r['tanggal']);
       echo "<tr><td class='left'>$no</td>
                 <td class='left'>$r[tanggal]</td>
@@ -138,10 +147,10 @@ switch($_GET[act]){
     echo "</table>";
 
     if ($_SESSION['level']=='anggota'){
-      $jmldata = mysql_num_rows(mysql_query("SELECT * FROM jadwal WHERE tanggal LIKE '%$_GET[tanggal]%'"));
+      $jmldata = mysqli_num_rows( $mysqli->query("SELECT * FROM jadwal WHERE tanggal LIKE '%$_GET[tanggal]%'"));
     }
     else{
-      $jmldata = mysql_num_rows(mysql_query("SELECT * FROM jadwal WHERE  tanggal LIKE '%$_GET[tanggal]%'"));
+      $jmldata = mysqli_num_rows( $mysqli->query("SELECT * FROM jadwal WHERE  tanggal LIKE '%$_GET[tanggal]%'"));
     }  
     $jmlhalaman  = $p->jumlahHalaman($jmldata, $batas);
     $linkHalaman = $p->navHalaman($_GET['halaman'], $jmlhalaman);
@@ -171,8 +180,8 @@ switch($_GET[act]){
           <tr><td>Nama</td>  
           <td><select name='anggota'>
             <option value=0 selected>- Pilih anggota -</option>";
-            $tampil=mysql_query("SELECT * FROM anggota ORDER BY nama asc ");
-            while($r=mysql_fetch_array($tampil)){
+            $tampil= $mysqli->query("SELECT * FROM anggota ORDER BY nama asc ");
+            while($r=mysqli_fetch_array($tampil)){
               echo "<option value=$r[id]>$r[nama]</option>";
             }
     echo "</select></td></tr>";
@@ -195,12 +204,12 @@ switch($_GET[act]){
 //======================================== tambah anggota ===========================================
       case "add":
     if ($_SESSION['level']=='anggota'){
-      $edit = mysql_query(" SELECT jadwal.id, jadwal.anggota_id, jadwal.tanggal, jadwal.sppd, jadwal.kegiatan, jadwal.tujuan, anggota.nama 
+      $edit =  $mysqli->query(" SELECT jadwal.id, jadwal.anggota_id, jadwal.tanggal, jadwal.sppd, jadwal.kegiatan, jadwal.tujuan, anggota.nama 
         FROM jadwal inner join anggota ON anggota.id=jadwal.anggota_id   
         WHERE jadwal.id ='$_GET[id]'");
     }
     
-    $r    = mysql_fetch_array($edit);
+    $r    = mysqli_fetch_array($edit);
 
     echo "<h2>Tambah</h2>
           <form method=POST enctype='multipart/form-data' action=$aksi?module=jadwal&act=add>
@@ -214,9 +223,9 @@ switch($_GET[act]){
           <tr><td class='left'>Anggota</td> <td class='left'>  
            <select name='anggota'>
            <option value=0 selected > Pilih Anggota </option>";
-            $tampil=mysql_query("SELECT * FROM anggota WHERE id <> $r[anggota_id]
+            $tampil= $mysqli->query("SELECT * FROM anggota WHERE id <> $r[anggota_id]
             AND id NOT IN (SELECT anggota_id FROM jadwal WHERE tanggal= '$r[tanggal]') ORDER BY nama asc ");
-            while($s=mysql_fetch_array($tampil)){
+            while($s=mysqli_fetch_array($tampil)){
               echo "<option value=$s[id]>$s[nama]</option>";
             }
     echo "</select></td></tr>";
@@ -229,7 +238,7 @@ switch($_GET[act]){
 //====================== EDIT =======================================================================    
   case "edit":
     if ($_SESSION['level']=='anggota'){
-      $edit = mysql_query(" SELECT jadwal.id,jadwal.lama, jadwal.anggota_id, jadwal.tanggal, jadwal.sppd, jadwal.kegiatan, jadwal.tujuan, anggota.nama 
+      $edit =  $mysqli->query(" SELECT jadwal.id,jadwal.lama, jadwal.anggota_id, jadwal.tanggal, jadwal.sppd, jadwal.kegiatan, jadwal.tujuan, anggota.nama 
         FROM jadwal inner join anggota ON anggota.id=jadwal.anggota_id   
         WHERE jadwal.id ='$_GET[id]'");
     }
@@ -239,7 +248,7 @@ switch($_GET[act]){
     //     WHERE jadwal.id ='$_GET[id]' ");
     // }
 
-    $r    = mysql_fetch_array($edit);
+    $r    = mysqli_fetch_array($edit);
 
     echo "<h2>Edit</h2>
           <form method=POST enctype='multipart/form-data' action=$aksi?module=jadwal&act=update>
@@ -249,8 +258,8 @@ switch($_GET[act]){
           <tr><td>Anggota</td>  <td>  
            <select name='anggota'>
             <option value=$r[anggota_id] selected> $r[nama]</option>";
-            $tampil=mysql_query("SELECT * FROM anggota  ORDER BY id asc");
-            while($s=mysql_fetch_array($tampil)){
+            $tampil= $mysqli->query("SELECT * FROM anggota  ORDER BY id asc");
+            while($s=mysqli_fetch_array($tampil)){
               echo "<option value=$r[id]>$s[nama]</option>";
             }
     echo "</select></td></tr>";

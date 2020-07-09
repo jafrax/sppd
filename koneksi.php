@@ -1,18 +1,23 @@
 <?php
 // panggil fungsi validasi xss dan injection
 // require_once('fungsi_validasi.php');
+// error_reporting(0);
+error_reporting(E_ALL);
+
 
 // definisikan koneksi ke database
-$server = "localhost";
-$username = "root";
-$password = "";
-$database = "sppd";
+$db_host = "localhost";
+$db_user = "root";
+$db_pass = "";
+$db_name = "sppd";
 
-// Koneksi dan memilih database di server
-mysql_connect($server,$username,$password) or die("Koneksi gagal");
-mysql_select_db($database) or die("Database tidak bisa dibuka_tenan ki");
+$mysqli = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
+ 
+if(mysqli_connect_errno()){
+	echo 'Gagal melakukan koneksi ke Database : '.mysqli_connect_error();
+}else{
+// 	echo 'Koneksi berhasil ^_^';
+}
 
-// buat variabel untuk validasi dari file fungsi_validasi.php
-// $val = new Lokovalidasi;
-// echo "koneksi";
+
 ?>

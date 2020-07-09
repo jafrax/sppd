@@ -1,5 +1,10 @@
 <?php
-session_start();
+if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    } 
+$act = "";
+// session_start();
  if (empty($_SESSION['user']) AND empty($_SESSION['pass'])){
   echo "<link href='style.css' rel='stylesheet' type='text/css'>
  <center>Untuk mengakses modul, Anda harus login <br>";
@@ -8,16 +13,21 @@ session_start();
 else{
 
 $aksi="modul/mod_users/aksi_users.php";
-switch($_GET[act]){
+if(isset($_GET['act'])) 
+    { 
+        $act = $_GET['act']; 
+    }
+ // var_dump($act);
+switch($act){
   // Tampil User
   default:
-    if ($_SESSION[blokir]=='N' ){
-      $tampil = mysql_query("SELECT * FROM anggota ORDER BY nama asc");
+    if ($_SESSION['blokir']=="N" ){
+      $tampil = $mysqli->query("SELECT * FROM anggota ORDER BY nama asc");
       echo "<h2>User</h2>
           <input type=button value='Tambah User' onclick=\"window.location.href='?module=anggota&act=tambahuser';\">";
     }
     else{
-      $tampil=mysql_query("SELECT * FROM anggota ");
+      $tampil=$mysqli->query("SELECT * FROM anggota ");
       echo "<h2>User</h2>";
     }
     
@@ -30,7 +40,7 @@ switch($_GET[act]){
           <td class='center'>aksi</td>
           </tr></thead> "; 
     $no=1;
-    while ($r=mysql_fetch_array($tampil)){
+    while ($r=mysqli_fetch_array($tampil)){
        echo "<tr><td class='left' width='25'>$no</td>
              <td class='left'>$r[nama]</td>
              <td class='left'>$r[username]</td>
@@ -42,8 +52,8 @@ switch($_GET[act]){
     break;
   
   case "tambahuser":
-    if ($_SESSION[blokir]=='N'){
-    echo "<h2>Tambah Anggota</h2>
+    if ($_SESSION['blokir']=="N"){
+    echo "<h2>Tambah User</h2>
           <form method=POST action='$aksi?module=anggota&act=input'>
           <table class='list'>
           <tr><td>Nama Lengkap</td> <td> : <input type=text name='nama_lengkap' size=30></td></tr>  
@@ -60,8 +70,8 @@ switch($_GET[act]){
      break;
     
   case "edituser":
-    $edit=mysql_query("SELECT * FROM anggota WHERE id='$_GET[id]'");
-    $r=mysql_fetch_array($edit);
+    $edit=$mysqli->query("SELECT * FROM anggota WHERE id='$_GET[id]'");
+    $r=mysqli_fetch_array($edit);
 
     if ($_SESSION[blokir]=='N'){
     echo "<h2>Edit Anggota</h2>

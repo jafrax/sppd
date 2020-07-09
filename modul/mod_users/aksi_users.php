@@ -30,7 +30,7 @@ if ($module=='anggota' AND $act=='input'){
                                 '$_POST[nama_lengkap]',
                                 '$_POST[blokir]')";
   // var_dump($query);                              
-  mysql_query($query);                              
+  $mysqli->query($query);                              
   header('location:../../media.php?module='.$module);
 }
 
@@ -52,7 +52,7 @@ elseif ($module=='anggota' AND $act=='update'){
                             WHERE id      = '$_POST[id]'";
   }
 // var_dump($query);
-  mysql_query($query);
+  $mysqli->query($query);
   header('location:../../media.php?module='.$module);
 }
 }

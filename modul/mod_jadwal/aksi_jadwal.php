@@ -17,7 +17,7 @@ $act=$_GET['act'];
 // Hapus komoditas
 if ($module=='jadwal' AND $act=='hapus'){
  
-  mysql_query("DELETE FROM jadwal WHERE id ='$_GET[id]'");
+   $mysqli->query("DELETE FROM jadwal WHERE id ='$_GET[id]'");
   header('location:../../media.php?module='.$module);
 }
 
@@ -34,7 +34,7 @@ elseif ($module=='jadwal' AND $act=='input'){
                   window.location=('../../media.php?module=jadwal')</script>";
   }else{
 
-        $cek = mysql_num_rows(mysql_query("SELECT * from jadwal 
+        $cek = mysqli_num_rows( $mysqli->query("SELECT * from jadwal 
           WHERE tanggal = '$tanggal' and anggota_id = '$anggota'"));
 
 
@@ -42,10 +42,10 @@ elseif ($module=='jadwal' AND $act=='input'){
 
           //jika masih tugas
             $sqlcek= "SELECT tanggal,  tanggal + INTERVAL (lama -1) DAY as pulang from jadwal WHERE anggota_id= '$anggota' and lama > 1 ";
-            $hasil = mysql_query($sqlcek);
-            $num = mysql_num_rows($hasil);
+            $hasil =  $mysqli->query($sqlcek);
+            $num = mysqli_num_rows($hasil);
             if($num >=1){
-             while($r=mysql_fetch_array($hasil)){
+             while($r=mysqli_fetch_array($hasil)){
                     //echo "brangkat ".$r['tanggal']." pulang ".$r['pulang'];
 
                      if (($tanggal > $r['tanggal']) && ($tanggal < $r['pulang']))
@@ -70,7 +70,7 @@ elseif ($module=='jadwal' AND $act=='input'){
                                 elseif ($bln == "07") {$rbln = "VII";} elseif ($bln == "08") {$rbln = "VIII";}elseif ($bln == "09") {$rbln = "IX";}
                                 elseif ($bln == "10") {$rbln = "X";} elseif ($bln == "11") {$rbln = "XI";} elseif ($bln == "12") {$rbln = "XII";}   
                                 
-                                $no = mysql_fetch_array(mysql_query("SELECT IFNULL((MAX(RIGHT(LEFT(sppd,7),3))+ 1),'1') as no FROM jadwal where tanggal= '$tanggal'"));
+                                $no = mysqli_fetch_array($mysqli->query("SELECT IFNULL((MAX(RIGHT(LEFT(sppd,7),3))+ 1),'1') as no FROM jadwal where tanggal= '$tanggal'"));
                                 $NoTransaksi = sprintf('%03s', $no['no']);
 
                                 
@@ -97,7 +97,7 @@ elseif ($module=='jadwal' AND $act=='input'){
                                                                 '$kegiatan',
                                                                 '$tujuan') ";
                                // echo $sql;
-                            mysql_query($sql);             
+                             $mysqli->query($sql);             
                             header('location:../../media.php?module='.$module);
                                 }
                       }
@@ -120,7 +120,7 @@ elseif ($module=='jadwal' AND $act=='input'){
                                 elseif ($bln == "07") {$rbln = "VII";} elseif ($bln == "08") {$rbln = "VIII";}elseif ($bln == "09") {$rbln = "IX";}
                                 elseif ($bln == "10") {$rbln = "X";} elseif ($bln == "11") {$rbln = "XI";} elseif ($bln == "12") {$rbln = "XII";}  
                                 
-                                $no = mysql_fetch_array(mysql_query("SELECT IFNULL((MAX(RIGHT(LEFT(sppd,7),3))+ 1),'1') as no FROM jadwal where tanggal= '$tanggal'"));
+                                $no = mysqli_fetch_array($mysqli->query("SELECT IFNULL((MAX(RIGHT(LEFT(sppd,7),3))+ 1),'1') as no FROM jadwal where tanggal= '$tanggal'"));
                                 $NoTransaksi = sprintf('%03s', $no['no']);
 
                                 
@@ -145,7 +145,7 @@ elseif ($module=='jadwal' AND $act=='input'){
                                                                 '$kegiatan',
                                                                 '$tujuan') ";
                                // echo $sql;
-                              mysql_query($sql);             
+                               $mysqli->query($sql);             
                               header('location:../../media.php?module='.$module);
                                 }
 
@@ -171,15 +171,15 @@ elseif ($module=='jadwal' AND $act=='add'){
 
 
     //ambil jumlah waktu yang ada
-      $waktu = mysql_fetch_array(mysql_query("SELECT lama from jadwal where id= '$_POST[id]' "));
+      $waktu = mysqli_fetch_array( $mysqli->query("SELECT lama from jadwal where id= '$_POST[id]' "));
             
     //jika masih tugas
       $sqlcek= "SELECT tanggal,  tanggal + INTERVAL (lama -1) DAY as pulang from jadwal 
       WHERE anggota_id= '$_POST[anggota]' and lama > 1 ";
-      $hasil = mysql_query($sqlcek);
-      $num = mysql_num_rows($hasil);
+      $hasil =  $mysqli->query($sqlcek);
+      $num = mysqli_num_rows($hasil);
       if($num >=1){
-       while($r=mysql_fetch_array($hasil)){
+       while($r=mysqli_fetch_array($hasil)){
               //echo "brangkat ".$r['tanggal']." pulang ".$r['pulang'];
 
                if (($_POST['tanggal'] > $r['tanggal']) && ($_POST['tanggal'] < $r['pulang']))
@@ -195,7 +195,7 @@ elseif ($module=='jadwal' AND $act=='add'){
                     values ('$_POST[tanggal]',$waktu[lama],'$_POST[anggota]','$_POST[sppd]','$_POST[kegiatan]','$_POST[tujuan]' ) ";
 
                     // echo $query;                             
-                    mysql_query($query);
+                     $mysqli->query($query);
                     header('location:../../media.php?module='.$module);
                 }
       }
@@ -204,7 +204,7 @@ elseif ($module=='jadwal' AND $act=='add'){
                     values ('$_POST[tanggal]',$waktu[lama],'$_POST[anggota]','$_POST[sppd]','$_POST[kegiatan]','$_POST[tujuan]' ) ";
 
                     // echo $query;                             
-                    mysql_query($query);
+                     $mysqli->query($query);
                     header('location:../../media.php?module='.$module);
       }
     
@@ -225,7 +225,7 @@ elseif ($module=='jadwal' AND $act=='update'){
                              WHERE id                  = '$_POST[id]' ";
 
   //echo $query;  
-  mysql_query($query);                           
+   $mysqli->query($query);                           
   header('location:../../media.php?module='.$module);
   
  

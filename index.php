@@ -54,7 +54,7 @@ return (true);
 <div class="clear"></div>
 
 <!-- Footer -->
-<div id="footer">Copyright &copy; 2016</div>
+<div id="footer">Copyright &copy; 2016 - 2020</div>
 
 <!-- vertical_effect -->
 <div id="vertical_effect">&nbsp;</div>

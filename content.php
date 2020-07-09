@@ -1,8 +1,8 @@
 <?php
-include "../config/koneksi.php";
-include "../config/library.php";
-include "../config/fungsi_indotgl.php";
-include "../config/fungsi_combobox.php";
+// include "../config/koneksi.php";
+// include "../config/library.php";
+// include "../config/fungsi_indotgl.php";
+// include "../config/fungsi_combobox.php";
 include "class_paging.php";
 
 // Bagian Home
@@ -13,15 +13,7 @@ if ($_GET['module']=='home'){
 		<p>&nbsp;</p>
 		<p>&nbsp;</p>
 		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-
-
-          <p align=right>Login : $hari_ini, ";
-  echo tgl_indo(date("Y m d")); 
-  echo " | "; 
-  echo date("H:i:s");
-  echo " WIB</p>";
-
+		<p>&nbsp;</p> ";
 }
 
 // Bagian jadwal Website
@@ -35,6 +27,29 @@ elseif ($_GET['module']=='jadwal'){
 elseif ($_GET['module']=='anggota'){
   // if ($_SESSION['level']=='anggota'){
     include "modul/mod_users/users.php";
+  // }
+}
+
+// Bagian tamu Website
+elseif ($_GET['module']=='tamu'){
+  // if ($_SESSION['level']=='anggota'){
+    include "modul/mod_tamu/tamu.php";
+  // }
+}
+
+
+// Bagian tamu Website
+elseif ($_GET['module']=='surat'){
+  // if ($_SESSION['level']=='anggota'){
+    include "modul/mod_surat/surat.php";
+  // }
+}
+
+
+// Bagian tamu Website
+elseif ($_GET['module']=='kelsurat'){
+  // if ($_SESSION['level']=='anggota'){
+    include "modul/mod_kelsurat/kelsurat.php";
   // }
 }
 
